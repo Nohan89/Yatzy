@@ -1,17 +1,12 @@
 package models;
 
-
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Used to calculate the score of throws with 5 dice
  */
 public class YatzyResultCalculator {
-
-    /**
-     *
-     * @param dice
-     */
 
     private Die[] dice;
 
@@ -36,12 +31,6 @@ public class YatzyResultCalculator {
         return sum;
     }
 
-    /**
-     * Calculates the score for Yatzy uppersection
-     *
-     * @param eyes eye value to calculate score for. eyes should be between 1 and 6
-     * @return the score for specified eye value
-     */
     public int upperSectionScore(int eyes) {
         int sum = 0;
         for (Die die : dice) {
@@ -53,7 +42,7 @@ public class YatzyResultCalculator {
     }
 
     public int onePairScore() {
-        Map<Integer, Integer> counts = new= countValues();
+        Map<Integer, Integer> counts = countValues();
         int highestPair = 0;
         for (int value = 6; value >= 1; value--) {
             if (counts.getOrDefault(value, 0) >= 2) {
@@ -61,7 +50,7 @@ public class YatzyResultCalculator {
                 break;
             }
         }
-        return highestPair;
+        return highestPair * 2;
     }
 
     public int twoPairScore() {
@@ -122,38 +111,38 @@ public class YatzyResultCalculator {
             if (!seen[i]) {
                 return 0;
             }
-            return 20;
+        }
+        return 20;
+    }
+
+    public int fullHouseScore() {
+        Map<Integer, Integer> counts = countValues();
+        boolean hasThree = false;
+        boolean hasTwo = false;
+
+        for (int count : counts.values()) {
+            if (count == 3) {
+                hasThree = true;
+            } else if (count == 2) {
+                hasTwo = true;
+            }
         }
 
-        public int fullHouseScore () {
-            Map<Integer, Integer> counts = countValues();
-            boolean hasThree = false;
-            boolean hasTwo = false;
-
-            for (int count : counts.values()) {
-                if (count == 3) {
-                    hasThree = true;
-                } else if (count == 2) {
-                    hasTwo = true;
-                }
-            }
-
-            if (hasThree && hasTwo && counts.size() == 2) {
-                return sumAllDice();
-            }
-            return 0;
-        }
-
-        public int chanceScore () {
+        if (hasThree && hasTwo && counts.size() == 2) {
             return sumAllDice();
         }
+        return 0;
+    }
 
-        public int yatzyScore () {
-            Map<Integer, Integer> counts = countValues();
-            if (counts.size() == 1) {
-                return 50;
-            }
-            return 0;
+    public int chanceScore() {
+        return sumAllDice();
+    }
+
+    public int yatzyScore() {
+        Map<Integer, Integer> counts = countValues();
+        if (counts.size() == 1) {
+            return 50;
         }
+        return 0;
     }
 }
